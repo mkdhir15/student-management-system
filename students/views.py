@@ -1,10 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Student
 from .forms import StudentForm
 
-
+@login_required
 def student_list(request):
 
     search = request.GET.get("search", "")
@@ -12,17 +13,17 @@ def student_list(request):
 
     students = Student.objects.all()
 
-    # Search
+    # searching by name 
     if search:
         students = students.filter(
             Q(name__icontains=search) |
             Q(email__icontains=search)
         )
 
-    # Filter
+    # Filterin
     if course:
         students = students.filter(course=course)
-
+    # For courses
     courses = Student.objects.values_list(
         "course",
         flat=True
@@ -39,7 +40,7 @@ def student_list(request):
         }
     )
 
-
+@login_required
 def student_add(request):
 
     if request.method == "POST":
@@ -62,7 +63,7 @@ def student_add(request):
         }
     )
 
-
+@login_required
 def student_edit(request, id):
 
     student = get_object_or_404(Student, id=id)
@@ -90,7 +91,7 @@ def student_edit(request, id):
         }
     )
 
-
+@login_required
 def student_delete(request, id):
 
     student = get_object_or_404(Student, id=id)
