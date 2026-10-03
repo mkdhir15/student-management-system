@@ -7,11 +7,17 @@ from .forms import StudentForm
 
 @login_required
 def student_list(request):
-
-    search = request.GET.get("search", "")
-    course = request.GET.get("course", "")
-
     students = Student.objects.all()
+    total_students = Student.objects.count()
+
+    return render(
+        request,
+        "students/student_list.html",
+        {
+            "students": students,
+            "total_students": total_students,
+        }
+    )
 
     # searching by name 
     if search:
@@ -20,7 +26,7 @@ def student_list(request):
             Q(email__icontains=search)
         )
 
-    # Filterin
+    # Filtering
     if course:
         students = students.filter(course=course)
     # For courses
@@ -106,4 +112,14 @@ def student_delete(request, id):
         {
             "student": student
         }
+    )
+
+@login_required
+def student_detail(request, id):
+    student = get_object_or_404(Student, id=id)
+
+    return render(
+        request,
+        "students/student_detail.html",
+        {"student": student}
     )

@@ -1,23 +1,23 @@
-{% extends "students/main.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Student</title>
+</head>
+<body>
 
-{% block title %}{{ title }}{% endblock %}
+    <h1>Add Student</h1>
 
-{% block content %}
+    <form method="POST">
+        {% csrf_token %}
 
-<h1>{{ title }}</h1>
+        {{ form.as_p }}
 
-<form method="POST">
+        <button type="submit">Add Student</button>
+    </form>
 
-    {% csrf_token %}
+    <br>
 
-    {{ form.as_p }}
+    <a href="{% url 'student_list' %}">Back to Students</a>
 
-    <button type="submit">Save</button>
-
-</form>
-
-<a href="{% url 'student_list' %}">
-    Back to Students
-</a>
-
-{% endblock %}
+</body>
+</html>

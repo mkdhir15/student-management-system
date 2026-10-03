@@ -1,77 +1,212 @@
 {% extends "students/main.html" %}
 
-{% block title %}Students{% endblock %}
+{% block title %}Students | Student Management System{% endblock %}
 
 {% block content %}
 
-<h1>Students</h1>
+<div class="page-header">
 
-<form method="GET">
+    <div>
+        <h1>Student List</h1>
+        <p>Manage and view all registered students.</p>
+    </div>
 
-    <input
-        type="text"
-        name="search"
-        placeholder="Search student..."
-        value="{{ search }}"
-    >
+</div>
 
-    <select name="course">
 
-        <option value="">All Courses</option>
+<!-- Total Students -->
 
-        {% for course in courses %}
-            <option value="{{ course }}"
-                {% if course == selected_course %}selected{% endif %}>
-                {{ course }}
+<div class="stat-card">
+
+    <h3>Total Students</h3>
+
+    <div class="number">
+        {{ total_students }}
+    </div>
+
+</div>
+
+
+<!-- Search and Filter -->
+
+<div class="search-box">
+
+    <form method="GET">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search student..."
+            value="{{ search }}"
+        >
+
+        <select name="course">
+
+            <option value="">
+                All Courses
             </option>
-        {% endfor %}
 
-    </select>
+            {% for course in courses %}
 
-    <button type="submit">Search</button>
+                <option
+                    value="{{ course }}"
+                    {% if course == selected_course %}
+                        selected
+                    {% endif %}
+                >
+                    {{ course }}
+                </option>
 
-    <a href="{% url 'student_list' %}">Clear</a>
+            {% endfor %}
 
-</form>
+        </select>
+
+        <button type="submit">
+            Search
+        </button>
+
+        <a
+            href="{% url 'student_list' %}"
+            class="btn"
+        >
+            Clear
+        </a>
+
+    </form>
+
+</div>
 
 
-<table>
+<!-- Student Table -->
 
-    <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Age</th>
-        <th>Course</th>
-        <th>Action</th>
-    </tr>
+<div class="table-card">
 
-    {% for student in students %}
+    <div class="table-header">
 
-    <tr>
-        <td>{{ student.name }}</td>
-        <td>{{ student.email }}</td>
-        <td>{{ student.age }}</td>
-        <td>{{ student.course }}</td>
+        <h2>Student Directory</h2>
 
-        <td>
-            <a href="{% url 'student_edit' student.id %}">
-                Edit
-            </a>
+    </div>
 
-            <a href="{% url 'student_delete' student.id %}">
-                Delete
-            </a>
-        </td>
-    </tr>
 
-    {% empty %}
+    <table>
 
-    <tr>
-        <td colspan="5">No students found.</td>
-    </tr>
+        <thead>
 
-    {% endfor %}
+            <tr>
 
-</table>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Age</th>
+                <th>Course</th>
+                <th>Actions</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for student in students %}
+
+            <tr>
+
+                <td>
+                    <span class="student-name">
+                        {{ student.name }}
+                    </span>
+                </td>
+
+
+                <td>
+                    {{ student.email }}
+                </td>
+
+
+                <td>
+
+                    <span class="badge age-badge">
+                        {{ student.age }}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span class="badge">
+                        {{ student.course }}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="actions">
+
+                        <!-- View -->
+
+                        <a
+                            href="{% url 'student_detail' student.id %}"
+                            class="btn"
+                        >
+                            View
+                        </a>
+
+
+                        <!-- Edit -->
+
+                        <a
+                            href="{% url 'student_edit' student.id %}"
+                            class="btn btn-edit"
+                        >
+                            Edit
+                        </a>
+
+
+                        <!-- Delete -->
+
+                        <a
+                            href="{% url 'student_delete' student.id %}"
+                            class="btn btn-delete"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+
+            {% empty %}
+
+            <tr>
+
+                <td colspan="5">
+
+                    <div class="empty-state">
+
+                        <h3>No Students Found</h3>
+
+                        <p>
+                            No students match your search or filter.
+                        </p>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
 
 {% endblock %}
